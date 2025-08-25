@@ -11,12 +11,20 @@ public class pivco {
         switch (command) {
             case "init":
                 if (!(args.length == 1)){
-                    initbuilder ib = new initbuilder(args[1]);
+                    Initbuilder ib = new Initbuilder(args[1]);
                 }else {
-                    initbuilder ib = new initbuilder();
+                    Initbuilder ib = new Initbuilder();
                 }
                 
                 break;
+            case "add": 
+                if (!(args.length != 1)){
+                    System.out.println("Usage: add <file or  ''.'' >");
+                    break;
+                }else {
+                    AddHandler ah = new AddHandler(args[1]);
+                    break;
+                }
             default:
                 throw new AssertionError();
         } 

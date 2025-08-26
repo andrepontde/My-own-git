@@ -3,9 +3,11 @@ package dev.andrepontde;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.util.HexFormat;
 
+//TODO -- Add .pivignore file implementation!!
 
 public class AddHandler {
     MessageDigest digest;
@@ -13,6 +15,18 @@ public class AddHandler {
     public AddHandler (String fInput){
         if (".".equals(fInput)){
             //Main code logic
+            Path starPath = Paths.get("");
+            try {
+                Files.walk(starPath)
+                    .filter(Files::isRegularFile)  // Filters only files, not directories
+                    .filter(path -> !path.startsWith(".pivco"))  //Skips .pivco folder
+                    .filter(path -> !path.startsWith(".git"))  //Skips .pivco folder
+                    .forEach(this::hashFile);
+
+            } catch (Exception e) {
+                System.out.println("Could not hash multiple files in the current dir \n" + e.getMessage());
+            }
+            
 
         }
 
@@ -20,9 +34,6 @@ public class AddHandler {
             //Code for single file
             Path filePath = Paths.get(fInput);
             hashFile(filePath);
-            
-            
-
         }
 
         
@@ -31,6 +42,7 @@ public class AddHandler {
     
     private String hashFile(Path fPath){
         String blobPath = "";
+        Path pivcoPath = Paths.get(".pivco");
         
         try {
             digest = MessageDigest.getInstance("SHA-1");
@@ -56,11 +68,13 @@ public class AddHandler {
 
             blobPath = blobBuilder(fullBlob, hashString);
 
-            // System.out.println(hashString);
-            // System.out.println(fContent);
+            String indexEntry = fPath + "  " + hashString +"\n";
 
-            //TODO - add idex reference!!!
-            //TODO - make a serializable map to write into the index instead of just a plain text
+            Files.writeString(pivcoPath.resolve("index"), indexEntry, 
+                //Create if empty, append if not:
+                StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+
+
 
         } catch (java.security.NoSuchAlgorithmException | java.io.IOException e) {
             System.out.println("Could not hash file: " + e.getMessage());

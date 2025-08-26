@@ -26,7 +26,7 @@ public class pivco {
                     break;
                 }
             default:
-                throw new AssertionError();
+                System.out.println("'" + args[0] + "' is not a pivco command");;
         } 
     }
 }

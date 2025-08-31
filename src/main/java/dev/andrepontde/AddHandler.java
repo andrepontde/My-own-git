@@ -15,9 +15,9 @@ public class AddHandler {
     public AddHandler (String fInput){
         if (".".equals(fInput)){
             //Main code logic
-            Path starPath = Paths.get("");
+            Path startPath = Paths.get("");
             try {
-                Files.walk(starPath)
+                Files.walk(startPath)
                     .filter(Files::isRegularFile)  // Filters only files, not directories
                     .filter(path -> !path.startsWith(".pivco"))  //Skips .pivco folder
                     .filter(path -> !path.startsWith(".git"))  //Skips .pivco folder
@@ -68,12 +68,34 @@ public class AddHandler {
 
             blobPath = blobBuilder(fullBlob, hashString);
 
-            String indexEntry = fPath + "  " + hashString +"\n";
+            String indexEntry = fPath + " " + hashString +"\n";
+            Path indexPath = pivcoPath.resolve("index");
+            String currentIndex = "";
+            if (Files.exists(indexPath)) {
+                currentIndex = Files.readString(indexPath);
+            }
 
-            Files.writeString(pivcoPath.resolve("index"), indexEntry, 
-                //Create if empty, append if not:
-                StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            // Check if entry already exists and update it
+            String[] lines = currentIndex.split("\n");
+            StringBuilder updatedIndex = new StringBuilder();
+            boolean entryFound = false;
 
+            for (String line : lines) {
+                if (line.startsWith(fPath.toString() + " ")) {
+                    updatedIndex.append(indexEntry);
+                    entryFound = true;
+                } else if (!line.isEmpty()) {
+                    updatedIndex.append(line).append("\n");
+                }
+            }
+
+            // If entry wasn't found, append it
+            if (!entryFound) {
+                updatedIndex.append(indexEntry);
+            }
+
+            Files.writeString(indexPath, updatedIndex.toString(), 
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 
 
         } catch (java.security.NoSuchAlgorithmException | java.io.IOException e) {

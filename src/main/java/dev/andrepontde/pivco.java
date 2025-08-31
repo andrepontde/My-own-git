@@ -18,11 +18,19 @@ public class pivco {
                 
                 break;
             case "add": 
-                if (!(args.length != 1)){
-                    System.out.println("Usage: add <file or  ''.'' >");
+                if (args.length == 1){
+                    System.out.println("Usage: add <file path or  ''.'' >");
                     break;
                 }else {
                     AddHandler ah = new AddHandler(args[1]);
+                    break;
+                }
+            case "status": 
+                if (args.length > 1){
+                    System.out.println("The status command does not take any parameters");
+                    break;
+                }else {
+                    StatusWard sw = new StatusWard();
                     break;
                 }
             default:

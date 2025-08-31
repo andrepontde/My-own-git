@@ -1,3 +1,5 @@
 pivco.bat
 .pivco
-/target
+./target
+target/
+ObjectTest.txt

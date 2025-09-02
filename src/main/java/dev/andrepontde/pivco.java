@@ -15,7 +15,6 @@ public class pivco {
                 }else {
                     Initbuilder ib = new Initbuilder();
                 }
-                
                 break;
             case "add": 
                 if (args.length == 1){
@@ -31,6 +30,14 @@ public class pivco {
                     break;
                 }else {
                     StatusWard sw = new StatusWard();
+                    break;
+                }
+            case "commit": 
+                if (args.length == 1){
+                    System.out.println("Usage: commit <message>");
+                    break;
+                }else {
+                    CommitHandler ch = new CommitHandler(args[1]);
                     break;
                 }
             default:
